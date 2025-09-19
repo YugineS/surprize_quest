@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Открой сюрприз!</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: url('img/bg.jpg') no-repeat center top;
+      background-attachment: scroll;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .locks-row {
+      margin-top: 25px;
+      margin-bottom: 25px;
+      display: flex;
+      justify-content: space-between;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .lock-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .lock {
+      width: 80px;
+      height: 140px;
+    }
+
+    .input-field {
+      margin: 10px 0;
+      padding: 5px;
+      border: 2px solid #ccc;
+      border-radius: 5px;
+      text-align: center;
+    }
+
+    .input-field.error {
+      border-color: red;
+    }
+
+    .unlock-btn {
+      padding: 5px 10px;
+      background-color: #28a745;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .unlock-btn:disabled {
+      background-color: gray;
+      cursor: not-allowed;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .success-image {
+      display: none;
+      width: 200px;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="locks-row">
+      <div class="lock-container">
+        <img src="img/locks/Lock_Closed.png" alt="Lock 1" class="lock" id="lock1">
+        <input type="text" class="input-field" id="input1" placeholder="Ключ 1">
+        <button class="unlock-btn" id="btn1">Открыть</button>
+      </div>
+      <div class="lock-container">
+        <img src="img/locks/Lock_Closed.png" alt="Lock 2" class="lock" id="lock2">
+        <input type="text" class="input-field" id="input2" placeholder="Ключ 2">
+        <button class="unlock-btn" id="btn2">Открыть</button>
+      </div>
+      <div class="lock-container">
+        <img src="img/locks/Lock_Closed.png" alt="Lock 3" class="lock" id="lock3">
+        <input type="text" class="input-field" id="input3" placeholder="Ключ 3">
+        <button class="unlock-btn" id="btn3">Открыть</button>
+      </div>
+      <div class="lock-container">
+        <img src="img/locks/Lock_Closed.png" alt="Lock 4" class="lock" id="lock4">
+        <input type="text" class="input-field" id="input4" placeholder="Ключ 4">
+        <button class="unlock-btn" id="btn4">Открыть</button>
+      </div>
+    </div>
+    <img src="img/success.jpg" alt="Surprise!" class="success-image" id="successImage">
+  </div>
+
+  <script>
+    // Hardcoded passwords
+    const passwords = ['гвоздь', 'белка', 'сорока', 'метла'];
+    function clearAllInputs() {
+      document.querySelectorAll('.input-field').forEach(input => {
+        input.value = '';
+        input.classList.remove('error');
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', clearAllInputs);
+    // Functionality for each lock
+    function setupLock(lockId, inputId, buttonId, correctPassword) {
+      const lock = document.getElementById(lockId);
+      const input = document.getElementById(inputId);
+      const button = document.getElementById(buttonId);
+
+      button.addEventListener('click', () => {
+        if (input.value && input.value.toLowerCase() === correctPassword.toLowerCase()) {
+          lock.src = 'img/locks/Lock_Opened.png'; // Unlocked lock image
+          button.classList.add('hidden');
+          input.classList.remove('error');
+          input.disabled = true;
+          checkAllUnlocked();
+        } else {
+          input.classList.add('error');
+        }
+      });
+
+      input.addEventListener('input', () => {
+        input.classList.remove('error'); // Remove red border when user types again
+      });
+    }
+
+    // Check if all locks are unlocked
+    function checkAllUnlocked() {
+      const buttons = document.querySelectorAll('.unlock-btn');
+      const allHidden = Array.from(buttons).every(button => button.classList.contains('hidden'));
+
+      if (allHidden) {
+        // document.querySelector('.container').innerHTML = ''; // Clear all elements
+        document.querySelectorAll('.lock-container').forEach(el => el.classList.add('hidden'));
+        const successImage = document.getElementById('successImage');
+        successImage.style.display = 'block'; // Show the success image
+      }
+    }
+
+    // Initialize locks
+    setupLock('lock1', 'input1', 'btn1', passwords[0]);
+    setupLock('lock2', 'input2', 'btn2', passwords[1]);
+    setupLock('lock3', 'input3', 'btn3', passwords[2]);
+    setupLock('lock4', 'input4', 'btn4', passwords[3]);
+  </script>
+</body>
+</html>
