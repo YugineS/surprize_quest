@@ -128,7 +128,7 @@
       const input = document.getElementById(inputId);
       const button = document.getElementById(buttonId);
 
-      button.addEventListener('click', () => {
+      function tryUnlock() {
         if (input.value && input.value.toLowerCase() === correctPassword.toLowerCase()) {
           lock.src = 'img/locks/Lock_Opened.png'; // Unlocked lock image
           button.classList.add('hidden');
@@ -137,6 +137,14 @@
           checkAllUnlocked();
         } else {
           input.classList.add('error');
+        }
+      }
+
+      button.addEventListener('click', tryUnlock);
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          tryUnlock();
         }
       });
 
